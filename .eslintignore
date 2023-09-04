@@ -1,0 +1,17 @@
+# node_modules/* is ignored by default, but can be added using !
+node_modules/*
+
+# Ignore dist files
+dist/*
+
+# Ignore docker files
+docker/*
+
+# Ignore i18n-generated ts file
+src/locales/generated/i18n.generated.ts
+
+# Ignore migration files
+src/database/sequelize/migrations/*
+
+# Ignore sequelize cli-config file
+src/database/sequelize/cli.config.ts
