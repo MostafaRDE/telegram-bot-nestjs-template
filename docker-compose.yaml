@@ -1,0 +1,25 @@
+version: "3.9"
+
+networks:
+  default:
+    name: telegram-bot-nestjs-template-service-net
+    driver: bridge
+
+services:
+  app:
+    build:
+      context: ./docker
+      dockerfile: ./Dockerfile
+    image: nestjs/base:10.1.17-alpine3.18
+    restart: always
+    env_file:
+      - ./.env
+    networks:
+      - default
+    ports:
+      - ${APP_PORT}:3000
+    volumes:
+      - .:/opt
+      - ./docker/storage:/home/storage:z
+    working_dir: /opt
+    command: npm run start:dev
