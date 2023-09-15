@@ -15,8 +15,25 @@ export class BotService implements OnModuleInit
         )
     }
 
-    private onReceivedMessageHandler(message: TelegramBot.Message, metadata: TelegramBot.Metadata)
+    checkHasCorrectAccess(message: TelegramBot.Message)
     {
-        //
+        if (message.chat.type === 'private')
+        {
+            throw new Error('You have not correct access')
+        }
+    }
+
+    private async onReceivedMessageHandler(message: TelegramBot.Message, metadata: TelegramBot.Metadata)
+    {
+        try
+        {
+            this.checkHasCorrectAccess(message)
+        }
+        catch
+        {
+            await this.bot.sendMessage(message.chat.id, 'You have not correct access 🚫✋')
+        }
+
+        console.log(message)
     }
 }
