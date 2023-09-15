@@ -1,4 +1,9 @@
 import { Module } from '@nestjs/common'
+import { BotService } from './bot.service'
 
-@Module({})
+@Module({
+    providers: [
+        BotService,
+    ],
+})
 export class BotModule {}
