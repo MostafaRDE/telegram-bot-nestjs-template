@@ -6,6 +6,7 @@ import { Cache } from 'cache-manager'
 import { Message } from 'node-telegram-bot-api'
 import { QueueProcessesEnum } from './enums/queue-processes.enum'
 import { QueuesEnum } from './enums/queues.enum'
+import { ProcessInterface } from './process.interface'
 
 @Injectable()
 export class JobManagerService
@@ -18,9 +19,7 @@ export class JobManagerService
 
     async getNextProcessIfExists(message: Message, canRemoveProcess = false)
     {
-        const result = await this.cacheManager.get<
-            { queue: QueuesEnum, process?: QueueProcessesEnum, data: Record<string, unknown> }
-        >(`account-process-${ message.from.id }`)
+        const result = await this.cacheManager.get<ProcessInterface>(`account-process-${ message.from.id }`)
 
         if (canRemoveProcess)
         {
