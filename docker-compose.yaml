@@ -25,6 +25,22 @@ services:
     command: npm run start:dev
     depends_on:
       - db-redis
+      - db-mongo
+
+  db-mongo:
+    image: mongo:6.0.9
+    restart: always
+    hostname: ${MONGO_HOSTNAME}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
+      MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    networks:
+      - default
+    ports:
+      - 27017:27017
 
   db-redis:
     image: redis:7.2.0-alpine3.18
