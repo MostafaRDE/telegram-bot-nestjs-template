@@ -50,7 +50,7 @@ export class BotService implements OnModuleInit
         if (processForCommandOrButtonKeyboard)
         {
             await this.jobManagerService.removeNextProcessIfExists(message)
-            
+
             return this.jobManagerService.doProcess(message, {
                 queue: processForCommandOrButtonKeyboard.queue,
                 process: processForCommandOrButtonKeyboard.process,
@@ -66,7 +66,7 @@ export class BotService implements OnModuleInit
         })
     }
 
-    private getProcessForCommandOrKeyboardIfExists(message: TelegramBot.Message): ProcessInterface
+    private getProcessForCommandOrKeyboardIfExists(message: TelegramBot.Message): ProcessInterface | void
     {
         const processOfCommand = this.getProcessOfCommand(message)
         if (processOfCommand)
@@ -77,7 +77,7 @@ export class BotService implements OnModuleInit
             return processOfButtonKeyboard
     }
 
-    private getProcessOfCommand(message: TelegramBot.Message): ProcessInterface
+    private getProcessOfCommand(message: TelegramBot.Message): ProcessInterface | void
     {
         if (message.entities)
         {
@@ -104,7 +104,7 @@ export class BotService implements OnModuleInit
         }
     }
 
-    private getProcessOfButtonKeyboardIfTextMessageIsAButtonOfAllKeyboardsButtons(message: TelegramBot.Message): ProcessInterface
+    private getProcessOfButtonKeyboardIfTextMessageIsAButtonOfAllKeyboardsButtons(message: TelegramBot.Message): ProcessInterface | void
     {
         switch (message.text)
         {
