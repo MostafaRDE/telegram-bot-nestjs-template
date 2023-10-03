@@ -5,5 +5,5 @@ export interface ProcessInterface
 {
     queue: QueuesEnum
     process?: QueueProcessesEnum
-    data: Record<string, unknown>
+    data?: Record<string, unknown>
 }

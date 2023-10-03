@@ -13,6 +13,8 @@ export class JobManagerService
 {
     constructor(
         @Inject(CACHE_MANAGER) private cacheManager: Cache,
+        @InjectQueue(QueuesEnum.Authentication)
+        private readonly authenticationQueue: Queue,
         @InjectQueue(QueuesEnum.Entry)
         private readonly entryQueue: Queue,
     ) {}
@@ -35,26 +37,18 @@ export class JobManagerService
     }
 
     doProcess(message: Message, options?: {
-        queue?: QueuesEnum, process?: QueueProcessesEnum,
+        queue?: QueuesEnum, process?: QueueProcessesEnum, data?: Record<string, unknown>,
     })
     {
         const queue = options?.queue || QueuesEnum.Entry
         const process = options?.process
 
-        switch (queue)
-        {
-            case QueuesEnum.Entry:
-            {
-                if (options?.process)
-                    void this.entryQueue.add(process, { message })
-                else void this.entryQueue.add({ message })
-
-                break
-            }
-        }
+        if (options?.process)
+            void this[ `${ queue }Queue` ].add(process, { message, data: options?.data })
+        else void this[ `${ queue }Queue` ].add({ message, data: options?.data })
     }
 
-    async createNewProcess(message: Message, data: Record<string, unknown>, options?: {
+    async createNextProcess(message: Message, data: Record<string, unknown>, options?: {
         queue?: QueuesEnum, process?: QueueProcessesEnum, ttl?: number,
     })
     {
