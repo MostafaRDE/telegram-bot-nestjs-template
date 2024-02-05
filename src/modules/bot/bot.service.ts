@@ -43,10 +43,11 @@ export class BotService implements OnModuleInit
             await this.bot.sendMessage(message.chat.id, 'You have not correct access 🚫✋')
         }
 
+
         // Check queue processes or queue jobs
         const nextProcessDetails = await this.jobManagerService.getNextProcessIfExists(message)
-
         const processForCommandOrButtonKeyboard = this.getProcessForCommandOrKeyboardIfExists(message)
+
         if (processForCommandOrButtonKeyboard)
         {
             await this.jobManagerService.removeNextProcessIfExists(message)
@@ -87,16 +88,16 @@ export class BotService implements OnModuleInit
             if (message.entities[ 0 ].offset > 0)
                 throw new Error('Please insert the command from start of message-editor box')
 
-            for (let entity of message.entities)
+            for (const entity of message.entities)
             {
                 if (entity.type === 'bot_command')
                 {
-                    const command = message.text.substring(entity.offset + 1, entity.offset + entity.length)
+                    const command = message.text.slice(entity.offset + 1, entity.offset + entity.length)
                     switch (command)
                     {
                         case BotCommandsEnum.Start:
                         {
-                            break
+                            return { queue: QueuesEnum.Entry }
                         }
                     }
                 }
@@ -123,5 +124,19 @@ export class BotService implements OnModuleInit
                 break
             }
         }
+    }
+
+    async sendMessage(
+        chatId: TelegramBot.ChatId,
+        text: string,
+        options?: TelegramBot.SendMessageOptions,
+    ): Promise<TelegramBot.Message>
+    {
+        return await this.bot.sendMessage(chatId, text, options || {
+            reply_markup: {
+                remove_keyboard: true,
+                keyboard: [],
+            },
+        })
     }
 }
